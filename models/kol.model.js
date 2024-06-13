@@ -11,10 +11,11 @@ const KOLSchema = new mongoose.Schema({
   photoCost: { type: Number, required: true },
   videoCost: { type: Number, required: true },
   er: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, {
   timestamps: true
 });
 
-KOLSchema.index({ name: 1, platform: 1 }, { unique: true }); // Composite index
+KOLSchema.index({ name: 1, platform: 1, userId: 1 }, { unique: true }); // Composite index with user reference
 
 module.exports = mongoose.model('KOL', KOLSchema);
