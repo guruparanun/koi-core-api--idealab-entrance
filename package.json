@@ -25,6 +25,7 @@
     "@feathersjs/feathers": "^5.0.26",
     "dotenv": "^16.4.5",
     "feathers-mongoose": "^8.5.1",
+    "feathers-swagger": "^3.0.0",
     "jest": "^29.7.0",
     "mongoose": "^8.4.1"
   }

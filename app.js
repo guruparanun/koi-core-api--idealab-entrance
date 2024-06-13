@@ -4,8 +4,7 @@ const { authentication } = require('@feathersjs/authentication');
 const { jwt } = require('@feathersjs/authentication-jwt');
 const { oauth } = require('@feathersjs/authentication-oauth');
 const mongoose = require('mongoose');
-const service = require('feathers-mongoose');
-const KOLModel = require('./models/kol.model');
+const swagger = require('feathers-swagger');
 require('dotenv').config();
 
 const app = express(feathers());
@@ -26,8 +25,22 @@ app.configure(oauth({
   successRedirect: '/',
 }));
 
+// Swagger Configuration
+app.configure(swagger({
+  docsPath: '/swagger',
+  uiIndex: true,
+  specs: {
+    info: {
+      title: 'Koi Core API',
+      description: 'API documentation for Koi Core API',
+      version: '1.0.0'
+    }
+  }
+}));
+
 // Services
-app.use('/kol', service({ Model: KOLModel }));
+require('./services/user.service')(app);
+require('./services/koi.service')(app);
 
 // Error handling
 app.use(express.errorHandler());

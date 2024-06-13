@@ -1,0 +1,12 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Koi Core API",
+    "description": "API documentation for Koi Core API",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3030",
+  "schemes": ["http"],
+  "paths": {},
+  "definitions": {}
+}
