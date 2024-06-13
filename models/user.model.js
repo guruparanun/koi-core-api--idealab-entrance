@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // Storing hashed passwords
-  name: { type: String, required: true },
-  googleId: { type: String }, // For Google OAuth
+  password: { type: String },
+  name: { type: String },
+  googleId: { type: String },
+  isVerified: { type: Boolean, default: false },
+  verificationToken: { type: String },
 }, {
   timestamps: true
 });

@@ -43,6 +43,17 @@ app.configure(swagger({
 require('./services/user.service')(app);
 require('./services/koi.service')(app);
 
+// Verification route
+app.get('/verify-email', async (req, res) => {
+  const token = req.query.token;
+  try {
+    const user = await app.service('users').verifyEmail(token);
+    res.status(200).send(`Email verified for ${user.email}`);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 // Error handling
 app.use(express.errorHandler());
 
