@@ -48,7 +48,18 @@ app.get('/verify-email', async (req, res) => {
   const token = req.query.token;
   try {
     const user = await app.service('users').verifyEmail(token);
-    res.status(200).send(`Email verified for ${user.email}`);
+    res.status(200).send(`Email verified for ${user.email}. Please set your password.`);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
+// Set password route
+app.post('/set-password', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await app.service('users').setPassword(email, password);
+    res.status(200).send(`Password set for ${user.email}`);
   } catch (error) {
     res.status(400).send(error.message);
   }

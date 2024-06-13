@@ -42,6 +42,23 @@ class UserService extends Service {
 
     return user;
   }
+
+  async setPassword(email, password) {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    if (!user.isVerified) {
+      throw new Error('Email not verified.');
+    }
+
+    user.password = password;
+    await user.save();
+
+    return user;
+  }
 }
 
 module.exports = function (app) {
