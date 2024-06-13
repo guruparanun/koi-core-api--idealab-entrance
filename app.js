@@ -5,6 +5,7 @@ const { jwt } = require('@feathersjs/authentication-jwt');
 const { oauth } = require('@feathersjs/authentication-oauth');
 const mongoose = require('mongoose');
 const swagger = require('feathers-swagger');
+const postmark = require('postmark');
 require('dotenv').config();
 
 const app = express(feathers());
