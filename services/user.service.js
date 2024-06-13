@@ -59,6 +59,26 @@ class UserService extends Service {
 
     return user;
   }
+
+  async find(params) {
+    return super.find(params);
+  }
+
+  async get(id, params) {
+    return super.get(id, params);
+  }
+
+  async update(id, data, params) {
+    return super.update(id, data, params);
+  }
+
+  async patch(id, data, params) {
+    return super.patch(id, data, params);
+  }
+
+  async remove(id, params) {
+    return super.remove(id, params);
+  }
 }
 
 module.exports = function (app) {

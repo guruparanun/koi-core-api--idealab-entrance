@@ -2,6 +2,7 @@ const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const { authentication } = require('@feathersjs/authentication');
 const { jwt } = require('@feathersjs/authentication-jwt');
+const { local } = require('@feathersjs/authentication-local');
 const { oauth } = require('@feathersjs/authentication-oauth');
 const mongoose = require('mongoose');
 const swagger = require('feathers-swagger');
@@ -18,6 +19,7 @@ app.configure(express.rest());
 // Authentication
 app.configure(authentication({ secret: process.env.JWT_SECRET }));
 app.configure(jwt());
+app.configure(local());
 app.configure(oauth({
   name: 'google',
   Strategy: require('passport-google-oauth20').Strategy,
