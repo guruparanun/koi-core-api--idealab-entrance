@@ -1,0 +1,31 @@
+{
+  "name": "koi-core-api--idealab-entrance",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guruparanun/koi-core-api--idealab-entrance.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guruparanun/koi-core-api--idealab-entrance/issues"
+  },
+  "homepage": "https://github.com/guruparanun/koi-core-api--idealab-entrance#readme",
+  "dependencies": {
+    "@feathersjs/authentication": "^5.0.26",
+    "@feathersjs/authentication-jwt": "^2.0.10",
+    "@feathersjs/authentication-oauth": "^5.0.26",
+    "@feathersjs/express": "^5.0.26",
+    "@feathersjs/feathers": "^5.0.26",
+    "dotenv": "^16.4.5",
+    "feathers-mongoose": "^8.5.1",
+    "jest": "^29.7.0",
+    "mongoose": "^8.4.1"
+  }
+}
