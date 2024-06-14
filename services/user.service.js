@@ -8,7 +8,6 @@ module.exports = function (app) {
   const Model = require('../models/user.model');
   app.use('/users', new UserService({ Model }));
 
-  // Get our initialized service so that we can register hooks
   const service = app.service('users');
 
   service.hooks({
@@ -17,9 +16,27 @@ module.exports = function (app) {
       find: [disallow('external')],
       get: [authenticate('jwt')],
       create: [],
-      update: [authenticate('jwt')],
-      patch: [authenticate('jwt')],
-      remove: [authenticate('jwt')]
+      update: [
+        authenticate('jwt'),
+        setField({
+          from: 'params.user._id',
+          as: 'params.query._id'
+        })
+      ],
+      patch: [
+        authenticate('jwt'),
+        setField({
+          from: 'params.user._id',
+          as: 'params.query._id'
+        })
+      ],
+      remove: [
+        authenticate('jwt'),
+        setField({
+          from: 'params.user._id',
+          as: 'params.query._id'
+        })
+      ]
     }
   });
 

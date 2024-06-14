@@ -1,5 +1,6 @@
 const { Service } = require('feathers-mongoose');
 const { authenticate } = require('@feathersjs/authentication').hooks;
+const { setField } = require('feathers-hooks-common');
 
 class KoiService extends Service {}
 
@@ -7,22 +8,33 @@ module.exports = function (app) {
   const Model = require('../models/koi.model');
   app.use('/koi', new KoiService({ Model }));
 
-  // Get our initialized service so that we can register hooks
   const service = app.service('koi');
-  
+
   service.hooks({
     before: {
-      all: [authenticate('jwt')]
+      all: [
+        authenticate('jwt'),
+        setField({
+          from: 'params.user._id',
+          as: 'params.query.createdBy'
+        })
+      ],
+      create: [
+        authenticate('jwt'),
+        setField({
+          from: 'params.user._id',
+          as: 'data.createdBy'
+        })
+      ]
     }
   });
 
-  // Add Swagger documentation
   service.docs = {
     description: 'Koi service',
     definitions: {
       koi: {
         type: 'object',
-        required: ['name', 'platform', 'sex', 'categories', 'tel', 'link', 'followers', 'photoCost', 'videoCost', 'er'],
+        required: ['name', 'platform', 'sex', 'categories', 'tel', 'link', 'followers', 'photoCost', 'videoCost', 'er', 'createdBy'],
         properties: {
           name: { type: 'string' },
           platform: { type: 'string' },
@@ -34,7 +46,7 @@ module.exports = function (app) {
           photoCost: { type: 'number' },
           videoCost: { type: 'number' },
           er: { type: 'string' },
-          userId: { type: 'string' }
+          createdBy: { type: 'string' }
         }
       },
       'koi list': {
