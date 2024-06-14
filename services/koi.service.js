@@ -1,4 +1,5 @@
 const { Service } = require('feathers-mongoose');
+const { authenticate } = require('@feathersjs/authentication').hooks;
 
 class KoiService extends Service {}
 
@@ -6,8 +7,16 @@ module.exports = function (app) {
   const Model = require('../models/koi.model');
   app.use('/koi', new KoiService({ Model }));
 
-  // Add this line to integrate with Swagger
+  // Get our initialized service so that we can register hooks
   const service = app.service('koi');
+  
+  service.hooks({
+    before: {
+      all: [authenticate('jwt')]
+    }
+  });
+
+  // Add Swagger documentation
   service.docs = {
     description: 'Koi service',
     definitions: {
@@ -24,7 +33,8 @@ module.exports = function (app) {
           followers: { type: 'number' },
           photoCost: { type: 'number' },
           videoCost: { type: 'number' },
-          er: { type: 'string' }
+          er: { type: 'string' },
+          userId: { type: 'string' }
         }
       },
       'koi list': {
