@@ -4,8 +4,8 @@ const passwordPattern = Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])
 
 const userCreateRequestSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: passwordPattern,
-  name: Joi.string().required(),
+  password: passwordPattern.optional(),
+  name: Joi.string().optional(),
   googleId: Joi.string().optional(),
   isVerified: Joi.boolean().optional(),
   verificationToken: Joi.string().optional()
@@ -42,7 +42,7 @@ const koiCreateRequestSchema = Joi.object({
   videoCost: Joi.number().required(),
   er: Joi.string().required(),
   createdBy: Joi.string().required(),
-  updatedBy: Joi.string().required() // New field
+  updatedBy: Joi.string().required()
 });
 
 const koiPatchRequestSchema = Joi.object({
@@ -57,7 +57,7 @@ const koiPatchRequestSchema = Joi.object({
   videoCost: Joi.number().optional(),
   er: Joi.string().optional(),
   createdBy: Joi.string().optional(),
-  updatedBy: Joi.string().required() // New field
+  updatedBy: Joi.string().required()
 });
 
 const koiResponseSchema = Joi.object({
@@ -73,7 +73,7 @@ const koiResponseSchema = Joi.object({
   videoCost: Joi.number().required(),
   er: Joi.string().required(),
   createdBy: Joi.string().required(),
-  updatedBy: Joi.string().required(), // New field
+  updatedBy: Joi.string().required(),
   createdAt: Joi.date().optional(),
   updatedAt: Joi.date().optional()
 });

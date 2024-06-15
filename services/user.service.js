@@ -5,8 +5,48 @@ const { userCreateRequestSchema, userPatchRequestSchema, userResponseSchema } = 
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const postmark = require('postmark');
 
 class UserService extends Service {
+  async create(data, params) {
+    // Check if email or googleId exists
+    const existingUser = await this.Model.findOne({ 
+      $or: [
+        { email: data.email },
+        { googleId: data.googleId }
+      ]
+    });
+    if (existingUser) {
+      throw new Error('Email or Google ID already exists');
+    }
+
+    // Set default name with email if not provided
+    if (!data.name) {
+      data.name = data.email;
+    }
+
+    // Generate verification token if email signup
+    if (!data.googleId) {
+      data.verificationToken = crypto.randomBytes(20).toString('hex');
+      
+      // Send verification email
+      const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
+      await client.sendEmail({
+        From: 'your-email@example.com',
+        To: data.email,
+        Subject: 'Verify your email',
+        TextBody: `Please verify your email using this token: ${data.verificationToken}`
+      });
+    }
+
+    // Hash password if provided
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    return super.create(data, params);
+  }
+
   async verifyEmail(token) {
     const user = await this.Model.findOne({ verificationToken: token });
 
@@ -39,26 +79,14 @@ module.exports = function (app) {
       all: [authenticate('jwt')],
       find: [disallow('external')],
       get: [authenticate('jwt')],
-      create: [
-        validateSchema(userCreateRequestSchema, { abortEarly: false }),
-        async context => {
-          context.data.password = await bcrypt.hash(context.data.password, 10);
-          return context;
-        }
-      ],
+      create: [validateSchema(userCreateRequestSchema, { abortEarly: false })],
       update: [
         authenticate('jwt'),
         setField({
           from: 'params.user._id',
           as: 'params.query._id'
         }),
-        validateSchema(userCreateRequestSchema, { abortEarly: false }),
-        async context => {
-          if (context.data.password) {
-            context.data.password = await bcrypt.hash(context.data.password, 10);
-          }
-          return context;
-        }
+        validateSchema(userCreateRequestSchema, { abortEarly: false })
       ],
       patch: [
         authenticate('jwt'),
@@ -66,13 +94,7 @@ module.exports = function (app) {
           from: 'params.user._id',
           as: 'params.query._id'
         }),
-        validateSchema(userPatchRequestSchema, { abortEarly: false }),
-        async context => {
-          if (context.data.password) {
-            context.data.password = await bcrypt.hash(context.data.password, 10);
-          }
-          return context;
-        }
+        validateSchema(userPatchRequestSchema, { abortEarly: false })
       ],
       remove: [
         authenticate('jwt'),
