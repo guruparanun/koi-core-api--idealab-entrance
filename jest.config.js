@@ -1,5 +1,5 @@
 module.exports = {
   testEnvironment: 'node',
-  coverageDirectory: 'coverage',
-  testMatch: ['**/test/**/*.test.js'],
+  setupFilesAfterEnv: ['./test/setup.js'],
+  testPathIgnorePatterns: ['/node_modules/'],
 };
