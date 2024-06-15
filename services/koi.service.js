@@ -1,6 +1,7 @@
 const { Service } = require('feathers-mongoose');
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const { setField } = require('feathers-hooks-common');
+const { setField, validateSchema } = require('feathers-hooks-common');
+const { koiCreateRequestSchema, koiPatchRequestSchema, koiResponseSchema } = require('./schemas');
 
 class KoiService extends Service {}
 
@@ -24,8 +25,36 @@ module.exports = function (app) {
         setField({
           from: 'params.user._id',
           as: 'data.createdBy'
-        })
+        }),
+        validateSchema(koiCreateRequestSchema, { abortEarly: false })
+      ],
+      update: [
+        authenticate('jwt'),
+        setField({
+          from: 'params.user._id',
+          as: 'params.query.createdBy'
+        }),
+        setField({
+          from: 'params.user._id',
+          as: 'data.updatedBy'
+        }),
+        validateSchema(koiCreateRequestSchema, { abortEarly: false })
+      ],
+      patch: [
+        authenticate('jwt'),
+        setField({
+          from: 'params.user._id',
+          as: 'params.query.createdBy'
+        }),
+        setField({
+          from: 'params.user._id',
+          as: 'data.updatedBy'
+        }),
+        validateSchema(koiPatchRequestSchema, { abortEarly: false })
       ]
+    },
+    after: {
+      all: [validateSchema(koiResponseSchema, { abortEarly: false, context: 'response' })]
     }
   });
 
@@ -34,7 +63,7 @@ module.exports = function (app) {
     definitions: {
       koi: {
         type: 'object',
-        required: ['name', 'platform', 'sex', 'categories', 'tel', 'link', 'followers', 'photoCost', 'videoCost', 'er', 'createdBy'],
+        required: ['name', 'platform', 'sex', 'categories', 'tel', 'link', 'followers', 'photoCost', 'videoCost', 'er', 'createdBy', 'updatedBy'],
         properties: {
           name: { type: 'string' },
           platform: { type: 'string' },
@@ -46,7 +75,8 @@ module.exports = function (app) {
           photoCost: { type: 'number' },
           videoCost: { type: 'number' },
           er: { type: 'string' },
-          createdBy: { type: 'string' }
+          createdBy: { type: 'string' },
+          updatedBy: { type: 'string' }
         }
       },
       'koi list': {

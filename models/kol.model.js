@@ -11,7 +11,8 @@ const KOLSchema = new mongoose.Schema({
   photoCost: { type: Number, required: true },
   videoCost: { type: Number, required: true },
   er: { type: String, required: true },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // New field
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // New field
 }, {
   timestamps: true
 });
