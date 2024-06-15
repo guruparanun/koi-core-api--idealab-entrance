@@ -2,8 +2,25 @@ const { Service } = require('feathers-mongoose');
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { disallow, setField, validateSchema } = require('feathers-hooks-common');
 const { userCreateRequestSchema, userPatchRequestSchema, userResponseSchema } = require('./schemas');
+const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
-class UserService extends Service {}
+class UserService extends Service {
+  async verifyEmail(token) {
+    const user = await this.Model.findOne({ verificationToken: token });
+
+    if (!user) {
+      throw new Error('Invalid or expired token.');
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    await user.save();
+
+    return user;
+  }
+
+}
 
 module.exports = function (app) {
   const Model = require('../models/user.model');

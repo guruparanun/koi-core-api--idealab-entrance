@@ -62,17 +62,6 @@ app.get('/verify-email', async (req, res) => {
   }
 });
 
-// Set password route
-app.post('/set-password', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await app.service('users').setPassword(email, password);
-    res.status(200).send(`Password set for ${user.email}`);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-});
-
 // Error handling
 app.use(express.errorHandler());
 
