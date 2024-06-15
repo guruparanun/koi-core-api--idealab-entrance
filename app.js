@@ -43,7 +43,10 @@ app.configure(swagger({
       title: 'Koi Core API',
       description: 'API documentation for Koi Core API',
       version: '1.0.0'
-    }
+    },
+    schemes: ['http', 'https'],
+    consumes: ['application/json'],
+    produces: ['application/json']
   }
 }));
 

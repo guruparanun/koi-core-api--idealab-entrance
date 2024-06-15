@@ -10,7 +10,7 @@ const postmark = require('postmark');
 class UserService extends Service {
   async create(data, params) {
     // Check if email or googleId exists
-    const existingUser = await this.Model.findOne({ 
+    const existingUser = await this.Model.findOne({
       $or: [
         { email: data.email },
         { googleId: data.googleId }
@@ -28,7 +28,7 @@ class UserService extends Service {
     // Generate verification token if email signup
     if (!data.googleId) {
       data.verificationToken = crypto.randomBytes(20).toString('hex');
-      
+
       // Send verification email
       const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
       await client.sendEmail({
@@ -127,7 +127,59 @@ module.exports = function (app) {
       'users list': {
         type: 'array',
         items: { $ref: '#/definitions/users' }
+      },
+      verifyEmailResponse: {
+        type: 'object',
+        properties: {
+          message: { type: 'string' },
+          accessToken: { type: 'string' }
+        }
+      }
+    },
+    actions: {
+      create: {
+        description: 'Create a new user',
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: { $ref: '#/definitions/users' }
+            }
+          }
+        },
+        responses: {
+          '200': {
+            description: 'User created successfully',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/definitions/users' }
+              }
+            }
+          }
+        }
+      },
+      verifyEmail: {
+        description: 'Verify email',
+        parameters: [
+          {
+            name: 'token',
+            in: 'query',
+            required: true,
+            description: 'Verification token',
+            schema: { type: 'string' }
+          }
+        ],
+        responses: {
+          '200': {
+            description: 'Email verified successfully',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/definitions/verifyEmailResponse' }
+              }
+            }
+          }
+        }
       }
     }
   };
+
 };
