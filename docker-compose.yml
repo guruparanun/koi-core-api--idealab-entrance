@@ -6,7 +6,7 @@ services:
     ports:
       - '3030:3030'
     environment:
-      MONGODB_URI: mongodb://mongo:27017/koi-core-api
+      MONGODB_URI: your_mongodb_uri
       JWT_SECRET: your_jwt_secret
       GOOGLE_CLIENT_ID: your_google_client_id
       GOOGLE_CLIENT_SECRET: your_google_client_secret
