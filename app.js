@@ -55,8 +55,8 @@ require('./services/koi.service')(app);
 app.get('/verify-email', async (req, res) => {
   const token = req.query.token;
   try {
-    const user = await app.service('users').verifyEmail(token);
-    res.status(200).send(`Email verified for ${user.email}. Please set your password.`);
+    const { message, accessToken } = await app.service('users').verifyEmail(token);
+    res.status(200).json({ message, accessToken });
   } catch (error) {
     res.status(400).send(error.message);
   }
