@@ -1,6 +1,7 @@
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const configuration = require('@feathersjs/configuration');
+const cors = require('cors');  // Import cors
 const { authentication } = require('@feathersjs/authentication');
 const { jwt } = require('@feathersjs/authentication-jwt');
 const { local } = require('@feathersjs/authentication-local');
@@ -16,6 +17,7 @@ const app = express(feathers());
 app.configure(configuration());
 
 // Middleware
+app.use(cors());  // Use cors middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.configure(express.rest());
